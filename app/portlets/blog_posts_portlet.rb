@@ -37,7 +37,10 @@ class BlogPostsPortlet < Cms::Portlet
     finder = finder.published
     finder = BcmsBlog::Blog.posts_finder(finder, @options)
 
-    @blog_posts = finder.limit(1)
+    @blog_posts = finder.all(
+      :limit => 1,
+      :order => "published_at desc"
+    )
 
     if other_tags
       @blog_posts.select! {|p| (p.tags.map(&:name).map(&:downcase) & other_tags.map(&:downcase)).size == other_tags.size }
